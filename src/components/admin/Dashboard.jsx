@@ -1,11 +1,9 @@
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/firebaseConfig";
-import { ICONS } from "../../static/icons";
 
 const Dashboard = () => {
   const [feedbacks, setFeedbacks] = useState([]);
-  const [activeCard, setActiveCard] = useState(null);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -26,9 +24,6 @@ const Dashboard = () => {
     fetchFeedbacks();
   }, []);
 
-  const toggleCard = (id) => {
-    setActiveCard((prevId) => (prevId === id ? null : id));
-  };
   return (
     <React.Fragment>
       <div className="p-6 bg-gray-100 min-h-screen">
@@ -54,16 +49,6 @@ const Dashboard = () => {
               >
                 <div className="flex justify-between items-center mb-2">
                   <h4 className="text-lg font-semibold">{item.name}</h4>
-                  <button
-                    onClick={() => toggleCard(item.id)}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    {activeCard === item.id ? (
-                      <ICONS.eyelock size={20} />
-                    ) : (
-                      <ICONS.eye size={20} />
-                    )}
-                  </button>
                 </div>
 
                 <p className="text-sm text-gray-500 ">
@@ -95,16 +80,11 @@ const Dashboard = () => {
                   {item.phone}
                 </p>
 
-                {activeCard === item.id && (
-                  <div className="mt-3">
-                    <p className="text-gray-700 text-sm whitespace-pre-line">
-                      <strong>Job Details:</strong> {item.jobDetails}
-                    </p>
-                    <p className="text-xs text-green-600 mt-2 font-medium">
-                      Read
-                    </p>
-                  </div>
-                )}
+                <div className="mt-3">
+                  <p className="text-gray-700 text-sm whitespace-pre-line">
+                    <strong>Job Details:</strong> {item.jobDetails}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
