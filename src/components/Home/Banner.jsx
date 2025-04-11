@@ -20,15 +20,9 @@ const Banner = () => {
           <div className="flex justify-center gap-4 mb-10 font-mw">
             <button
               onClick={() => navigate("/contact")}
-              className="bg-white text-xl cursor-pointer text-black md:px-20 px-4 md:py-5 py-3 rounded-md hover:bg-gray-200 transition"
+              className="bg-white capitalize text-xl cursor-pointer text-black md:px-20 px-4 md:py-5 py-3 rounded-md hover:bg-gray-200 transition"
             >
-              Contact
-            </button>
-            <button
-              onClick={() => navigate("/contact")}
-              className="bg-blue-500 text-xl cursor-pointer text-white md:px-20 px-4 md:py-5 py-3 rounded-md hover:bg-black/80 transition"
-            >
-              Try Demo
+              Contact us
             </button>
           </div>
         </div>
