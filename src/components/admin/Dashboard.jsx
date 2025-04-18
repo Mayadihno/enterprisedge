@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/firebaseConfig";
 
@@ -8,13 +8,16 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const querySnapshot = await getDocs(
-          collection(db, "customerFeedbacksegun")
+        const q = query(
+          collection(db, "customerFeedbacksegun"),
+          orderBy("timestamp", "desc")
         );
+        const querySnapshot = await getDocs(q);
         const data = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
+
         setFeedbacks(data);
       } catch (error) {
         console.error("Error fetching feedback:", error);

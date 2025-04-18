@@ -1,11 +1,26 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { navbarData } from "./data";
 import { ICONS } from "../../static/icons";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/firebaseConfig";
 
 const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem("accessToken");
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+  const accessToken = localStorage.getItem("accessToken");
   return (
     <React.Fragment>
       <>
@@ -34,6 +49,16 @@ const Navbar = () => {
                   </Link>
                 </li>
               ))}
+              {accessToken && (
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="text-lg font-semibold transition text-white rounded-md cursor-pointer p-1 bg-[#FF6300]"
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
             </ul>
 
             {/* Mobile Menu Button */}
@@ -86,6 +111,16 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
+            {accessToken && (
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="text-lg font-semibold transition hover:text-[#FF6300]"
+                >
+                  Logout
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </>

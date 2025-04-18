@@ -9,37 +9,55 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
+  const [formErrors, setFormErrors] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // Reset previous errors
+    setFormErrors({ email: "", password: "" });
+    setError("");
+
+    let hasError = false;
+
+    if (!email.trim()) {
+      setFormErrors((prev) => ({ ...prev, email: "Email is required" }));
+      hasError = true;
+    }
+
+    if (!password.trim()) {
+      setFormErrors((prev) => ({ ...prev, password: "Password is required" }));
+      hasError = true;
+    }
+
+    if (hasError) return;
+
     setLoading(true);
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
       localStorage.setItem("accessToken", user?.user?.accessToken);
       setLoading(false);
-
       navigate("/admin-dashboard", { replace: true });
-      e.target.reset();
     } catch (error) {
       if (
         error.code === "auth/wrong-password" ||
         error.code === "auth/user-not-found"
       ) {
         setError("Incorrect Email or Password");
-        setLoading(false);
       } else {
         setError("Something went wrong. Please try again.");
-        setLoading(false);
       }
+      setLoading(false);
     }
   };
+
   return (
     <React.Fragment>
       <div className="flex justify-center items-center h-screen bg-[#F5F5F4]">
-        <div className="relative w-[95%] md:w-[30%] h-[40vh] md:h-[50vh] bg-white rounded-md p-4 shadow-sm md:mt-0 mt-[-50px] ">
+        <div className="relative w-[95%] md:w-[30%] h-[40vh] md:h-[55vh] bg-white rounded-md p-4 shadow-sm md:mt-0 mt-[-50px] ">
           <div className="pt-10">
             <h3 className="text-xl font-[500] text-center text-black">
               Admin Login
@@ -53,6 +71,9 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              {formErrors.email && (
+                <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
+              )}
               <div className="relative pt-6">
                 <input
                   type={!visible ? "password" : "text"}
@@ -63,6 +84,11 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                {formErrors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.password}
+                  </p>
+                )}
                 {visible ? (
                   <ICONS.eyelock
                     className="absolute top-9 right-2 cursor-pointer"
